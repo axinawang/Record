@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Record</string>
+    <string name="record_title_hint">input record title</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="record_detail_hint">input record detail</string>
+    <string name="record_title_lable">Title</string>
+    <string name="record_detail_lable">Detail</string>
+    <string name="record_solved_label">Solved</string>
+    <string name="records_title">Records</string>
+</resources>
