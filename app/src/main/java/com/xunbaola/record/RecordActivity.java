@@ -3,13 +3,20 @@ package com.xunbaola.record;
 import android.app.Fragment;
 import android.util.Log;
 
+import java.util.UUID;
+
 public class RecordActivity extends SingleFragmentActivity {
 
     private static final String TAG =RecordActivity.class.getName() ;
 
+    /**
+     * 创建带参数的recordFragment,参数中包装了recordId
+     * @return
+     */
     @Override
     protected Fragment createFragment() {
-        return new RecordFragment();
+        UUID recordId= (UUID) getIntent().getSerializableExtra(RecordFragment.EXTRA_RECORD_ID);
+        return RecordFragment.newInstance(recordId);
     }
 
 

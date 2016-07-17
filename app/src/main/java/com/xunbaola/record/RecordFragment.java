@@ -30,6 +30,18 @@ public class RecordFragment extends Fragment {
     private CheckBox mRecordSolved;//是否处理好记录
     private Button mRecordDate;//记录时间
 
+    /**
+     * 创建实例，设置参数
+     * @param recordId uuid
+     * @return recordFragment
+     */
+    public static RecordFragment newInstance(UUID recordId){
+        RecordFragment fragment=new RecordFragment();
+        Bundle bundle=new Bundle();
+        bundle.putSerializable(EXTRA_RECORD_ID,recordId);
+        fragment.setArguments(bundle);
+        return  fragment;
+    }
     @Override
     public void onAttach(Context context) {
         Log.i(TAG,"onAttach");
@@ -37,14 +49,14 @@ public class RecordFragment extends Fragment {
 
     }
     /**
-     * 在记录片段被创建时，创建一个记录对象
+     * 在记录片段被创建时，获取一个记录对象
      * @param savedInstanceState
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        UUID uuid= (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_RECORD_ID);
+        UUID uuid= (UUID) getArguments().getSerializable(EXTRA_RECORD_ID);
 
         mRecord = RecordLab.get(getActivity()).getRecord(uuid);
     }
@@ -103,7 +115,7 @@ public class RecordFragment extends Fragment {
         mRecordDate.setText(mRecord.getDate().toString());
         mRecordDate.setEnabled(false);
         mRecordSolved= (CheckBox) v.findViewById(R.id.record_solved);
-        mRecordSolved.setChecked(mRecord.isSolved());
+        mRecordSolved.setChecked(mRecord.isSolved() );
         mRecordSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override//不需要注解
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
