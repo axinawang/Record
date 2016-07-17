@@ -15,12 +15,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
 
+import java.util.UUID;
 
 
 public class RecordFragment extends Fragment {
     private static final String TAG=RecordFragment.class.getName();
+    public static final String EXTRA_RECORD_ID="com.xunbaola.record.record_uuid";
     private Record mRecord;//保存记录
     private EditText mTitle;//标题
     private EditText mDetail;//详情
@@ -41,7 +44,9 @@ public class RecordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        mRecord = new Record();
+        UUID uuid= (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_RECORD_ID);
+
+        mRecord = RecordLab.get(getActivity()).getRecord(uuid);
     }
 
     /**
@@ -59,9 +64,7 @@ public class RecordFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_record, container, false);
 
         mTitle = (EditText) v.findViewById(R.id.record_title);
-        mDetail = (EditText) v.findViewById(R.id.record_detail);
-        mRecordDate = (Button) v.findViewById(R.id.record_date);
-        mRecordSolved= (CheckBox) v.findViewById(R.id.record_solved);
+        mTitle.setText(mRecord.getTitle());
         mTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,6 +81,8 @@ public class RecordFragment extends Fragment {
 
             }
         });
+        mDetail = (EditText) v.findViewById(R.id.record_detail);
+        mDetail.setText(mRecord.getDetail());
         mDetail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,15 +99,22 @@ public class RecordFragment extends Fragment {
 
             }
         });
-
+        mRecordDate = (Button) v.findViewById(R.id.record_date);
         mRecordDate.setText(mRecord.getDate().toString());
         mRecordDate.setEnabled(false);
+        mRecordSolved= (CheckBox) v.findViewById(R.id.record_solved);
+        mRecordSolved.setChecked(mRecord.isSolved());
         mRecordSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override//不需要注解
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mRecord.setSolved(isChecked);
             }
         });
+
+
+
+
+
 
         return v;
     }

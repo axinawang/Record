@@ -2,6 +2,7 @@ package com.xunbaola.record;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +45,10 @@ public class RecordListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Record r= ((RecordAdapter) getListAdapter()).getItem(position);
-        Log.i(TAG,r.getTitle()+"was clicked");
+        //Log.i(TAG,r.getTitle()+"was clicked");
+        Intent i=new Intent(getActivity(),RecordActivity.class);
+        i.putExtra(RecordFragment.EXTRA_RECORD_ID,r.getUUID());
+        startActivity(i);
     }
     private class RecordAdapter extends ArrayAdapter<Record>{
 
