@@ -1,10 +1,9 @@
 package com.xunbaola.record;
 
-import android.app.ListFragment;
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,13 +15,13 @@ import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2016/7/14.
  */
 public class RecordListFragment extends ListFragment {
     private static final String TAG = RecordListFragment.class.getName();
+    private static final int REQUEST_RECORD = 1;
     private ArrayList<Record> mRecords;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,10 +45,22 @@ public class RecordListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         Record r= ((RecordAdapter) getListAdapter()).getItem(position);
         //Log.i(TAG,r.getTitle()+"was clicked");
-        Intent i=new Intent(getActivity(),RecordActivity.class);
+        Intent i=new Intent(getActivity(),RecordPagerActivity.class);
         i.putExtra(RecordFragment.EXTRA_RECORD_ID,r.getUUID());
-        startActivity(i);
+        startActivityForResult(i,REQUEST_RECORD);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((RecordAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private class RecordAdapter extends ArrayAdapter<Record>{
 
         public RecordAdapter(ArrayList<Record> records) {

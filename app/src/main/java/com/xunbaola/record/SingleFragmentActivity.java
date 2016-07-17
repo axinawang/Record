@@ -1,17 +1,20 @@
 package com.xunbaola.record;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+
+
+
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 /**
  * 只能容纳单个fragment的抽象Activity
  * 复用之前创建的fragment
  */
-public abstract class SingleFragmentActivity extends Activity {
+public abstract class SingleFragmentActivity extends FragmentActivity {
 
     private static final String TAG =SingleFragmentActivity.class.getName() ;
     protected abstract Fragment createFragment();
@@ -19,7 +22,7 @@ public abstract class SingleFragmentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        FragmentManager fm=getFragmentManager();
+        FragmentManager fm=getSupportFragmentManager();
         Log.i(TAG,"fm:"+fm);
         Fragment fragment=fm.findFragmentById(R.id.fragmentContainer);
         if (fragment==null){
