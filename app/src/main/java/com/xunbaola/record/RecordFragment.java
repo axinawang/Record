@@ -25,6 +25,7 @@ import java.util.UUID;
 public class RecordFragment extends Fragment {
     private static final String TAG=RecordFragment.class.getName();
     public static final String EXTRA_RECORD_ID="com.xunbaola.record.record_uuid";
+    private static final String DIALOG_DATE = "date";
     private Record mRecord;//保存记录
     private EditText mTitle;//标题
     private EditText mDetail;//详情
@@ -114,7 +115,14 @@ public class RecordFragment extends Fragment {
         });
         mRecordDate = (Button) v.findViewById(R.id.record_date);
         mRecordDate.setText(mRecord.getDate().toString());
-        mRecordDate.setEnabled(false);
+       // mRecordDate.setEnabled(false);
+        mRecordDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePikerFragment fragment=DatePikerFragment.newInstance(mRecord.getDate());
+                fragment.show(getActivity().getSupportFragmentManager(),DIALOG_DATE);
+            }
+        });
         mRecordSolved= (CheckBox) v.findViewById(R.id.record_solved);
         mRecordSolved.setChecked(mRecord.isSolved() );
         mRecordSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

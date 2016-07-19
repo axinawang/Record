@@ -1,14 +1,12 @@
 package com.xunbaola.record;
 
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
@@ -16,7 +14,7 @@ import com.xunbaola.record.domain.Record;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class RecordPagerActivity extends FragmentActivity {
+public class RecordPagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ArrayList<Record> mRecords;
     @Override
@@ -40,7 +38,26 @@ public class RecordPagerActivity extends FragmentActivity {
                 return RecordFragment.newInstance(record.getUUID());
             }
         });
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Record record=mRecords.get(position);
+                if (record.getTitle()!=null){
+                    setTitle(record.getTitle());
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });*/
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
