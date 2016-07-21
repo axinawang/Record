@@ -1,8 +1,10 @@
 package com.xunbaola.record;
 
 
+import android.app.Activity;
 import android.content.Context;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
 
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -26,12 +29,12 @@ public class RecordFragment extends Fragment {
     private static final String TAG=RecordFragment.class.getName();
     public static final String EXTRA_RECORD_ID="com.xunbaola.record.record_uuid";
     private static final String DIALOG_DATE = "date";
+    private static final int REQUEST_DATE = 0;
     private Record mRecord;//保存记录
     private EditText mTitle;//标题
     private EditText mDetail;//详情
     private CheckBox mRecordSolved;//是否处理好记录
     private Button mRecordDate;//记录时间
-
     /**
      * 创建实例，设置参数
      * @param recordId uuid
@@ -43,6 +46,13 @@ public class RecordFragment extends Fragment {
         bundle.putSerializable(EXTRA_RECORD_ID,recordId);
         fragment.setArguments(bundle);
         return  fragment;
+    }
+
+    /**
+     *
+     */
+    public void updateDate(){
+        mRecordDate.setText(mRecord.getDate().toString());
     }
     @Override
     public void onAttach(Context context) {
@@ -114,12 +124,13 @@ public class RecordFragment extends Fragment {
             }
         });
         mRecordDate = (Button) v.findViewById(R.id.record_date);
-        mRecordDate.setText(mRecord.getDate().toString());
+        updateDate();
        // mRecordDate.setEnabled(false);
         mRecordDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePikerFragment fragment=DatePikerFragment.newInstance(mRecord.getDate());
+                fragment.setTargetFragment(RecordFragment.this,REQUEST_DATE);
                 fragment.show(getActivity().getSupportFragmentManager(),DIALOG_DATE);
             }
         });
@@ -138,6 +149,16 @@ public class RecordFragment extends Fragment {
 
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode!= Activity.RESULT_OK) return;
+        if (requestCode==REQUEST_DATE){
+            Date date= (Date) data.getSerializableExtra(DatePikerFragment.EXTRA_DATE);
+            mRecord.setDate(date);
+            updateDate();
+        }
     }
 
     @Override

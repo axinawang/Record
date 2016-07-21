@@ -1,11 +1,14 @@
 package com.xunbaola.record;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.nfc.Tag;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -18,6 +21,7 @@ public class DatePikerFragment extends DialogFragment {
     public static final String EXTRA_DATE="com.xunbaola.record.date";
     private static final String TAG ="DatePikerFragment" ;
     private Date mDate;
+
     public static DatePikerFragment newInstance(Date date){
         Bundle args=new Bundle();
         args.putSerializable(EXTRA_DATE,date);
@@ -26,7 +30,15 @@ public class DatePikerFragment extends DialogFragment {
         return fragment;
     }
 
-
+private void sendResult(int resultCode){
+    Fragment f =getTargetFragment();
+    if (f==null){
+        return;
+    }
+    Intent i=new Intent();
+    i.putExtra(EXTRA_DATE,mDate);
+    f.onActivityResult(getTargetRequestCode(),resultCode,i);
+}
 
     @NonNull
     @Override
@@ -51,7 +63,12 @@ public class DatePikerFragment extends DialogFragment {
         });
         return new AlertDialog.Builder(getActivity()).setTitle(R.string.date_picker_title)
                 .setView(v)
-                .setPositiveButton(android.R.string.ok,null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendResult(Activity.RESULT_OK);
+                    }
+                })
                 .create();
     }
 }
