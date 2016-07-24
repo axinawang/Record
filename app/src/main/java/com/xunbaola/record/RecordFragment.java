@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,13 +29,16 @@ import java.util.UUID;
 public class RecordFragment extends Fragment {
     private static final String TAG=RecordFragment.class.getName();
     public static final String EXTRA_RECORD_ID="com.xunbaola.record.record_uuid";
-    private static final String DIALOG_DATE = "date";
-    private static final int REQUEST_DATE = 0;
+    private static final String DIALOG_DATE_TIME = "date_time";
+    //private static final String DIALOG_TIME = "time";
+    private static final int REQUEST_DATE_TIME = 0;
+    //private static final int REQUEST_TIME =1 ;
     private Record mRecord;//保存记录
     private EditText mTitle;//标题
     private EditText mDetail;//详情
     private CheckBox mRecordSolved;//是否处理好记录
     private Button mRecordDate;//记录时间
+
     /**
      * 创建实例，设置参数
      * @param recordId uuid
@@ -52,7 +56,10 @@ public class RecordFragment extends Fragment {
      *
      */
     public void updateDate(){
-        mRecordDate.setText(mRecord.getDate().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        mRecordDate.setText(sdf.format(mRecord.getDate()));
+       // mRecordTime.setText(mRecord.getDate().toString());
     }
     @Override
     public void onAttach(Context context) {
@@ -124,16 +131,17 @@ public class RecordFragment extends Fragment {
             }
         });
         mRecordDate = (Button) v.findViewById(R.id.record_date);
-        updateDate();
+       updateDate();
        // mRecordDate.setEnabled(false);
         mRecordDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePikerFragment fragment=DatePikerFragment.newInstance(mRecord.getDate());
-                fragment.setTargetFragment(RecordFragment.this,REQUEST_DATE);
-                fragment.show(getActivity().getSupportFragmentManager(),DIALOG_DATE);
+                DateTimeFragment fragment=DateTimeFragment.newInstance(mRecord.getDate());
+                fragment.setTargetFragment(RecordFragment.this,REQUEST_DATE_TIME);
+                fragment.show(getActivity().getSupportFragmentManager(),DIALOG_DATE_TIME);
             }
         });
+
         mRecordSolved= (CheckBox) v.findViewById(R.id.record_solved);
         mRecordSolved.setChecked(mRecord.isSolved() );
         mRecordSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -154,8 +162,8 @@ public class RecordFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode!= Activity.RESULT_OK) return;
-        if (requestCode==REQUEST_DATE){
-            Date date= (Date) data.getSerializableExtra(DatePikerFragment.EXTRA_DATE);
+        if (requestCode==REQUEST_DATE_TIME){
+            Date date= (Date) data.getSerializableExtra(DateTimeFragment.EXTRA_DATE_TIME);
             mRecord.setDate(date);
             updateDate();
         }
