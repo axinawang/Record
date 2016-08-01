@@ -17,4 +17,7 @@
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle">If you see something,you say something.</string>
     <string name="list_fragment_empty_text">empty</string>
+    <string name="data_file_name">record.json</string>
+    <string name="data_save_success">data saved successfully!</string>
+    <string name="data_save_fail">data saved fail</string>
 </resources>

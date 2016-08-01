@@ -1,5 +1,8 @@
 package com.xunbaola.record.domain;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -7,6 +10,13 @@ import java.util.UUID;
  * Created by Administrator on 2016/7/6.
  */
 public class Record {
+    private static final String JSON_UUID="uuid";
+    public static final String JSON_UUID1 = JSON_UUID;
+    private static final String JSON_TITLE="title";
+    private static final String JSON_DETAIL="detail";
+    private static final String JSON_DATE="date";
+    private static final String JSON_SOLVED="solved";
+
     private UUID mUUID;
     private String mTitle;
     private String mDetail;
@@ -15,6 +25,13 @@ public class Record {
     public Record(){
         mUUID=UUID.randomUUID();
         mDate=new Date();
+    }
+    public Record(JSONObject json) throws JSONException {
+        mUUID=UUID.fromString(json.getString(JSON_UUID));
+        if (json.has(JSON_TITLE)) mTitle=json.getString(JSON_TITLE);
+        if (json.has(JSON_DETAIL)) mDetail=json.getString(JSON_DETAIL);
+        mDate=new Date(json.getLong(JSON_DATE));
+        mSolved=json.getBoolean(JSON_SOLVED);
     }
 
     /**
@@ -76,5 +93,16 @@ public class Record {
     @Override
     public String toString() {
         return mTitle;
+    }
+
+    public JSONObject toJson() throws JSONException {
+        JSONObject json=new JSONObject();
+        json.put(JSON_UUID,mUUID);
+
+        json.put(JSON_TITLE,mTitle);
+        json.put(JSON_DETAIL,mDetail);
+        json.put(JSON_DATE,mDate.getTime());
+        json.put(JSON_SOLVED,mSolved);
+        return json;
     }
 }

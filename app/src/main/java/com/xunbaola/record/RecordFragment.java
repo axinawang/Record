@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Record;
@@ -218,6 +219,11 @@ public class RecordFragment extends Fragment {
     public void onPause() {
         Log.i(TAG,"onPause");
         super.onPause();
+        if (RecordLab.get(getActivity()).saveRecords()){
+            Toast.makeText(getActivity(),getText(R.string.data_save_success).toString(),Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(getActivity(),getText(R.string.data_save_fail).toString(),Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
