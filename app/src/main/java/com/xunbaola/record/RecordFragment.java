@@ -1,16 +1,21 @@
 package com.xunbaola.record;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -75,6 +80,8 @@ public class RecordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         UUID uuid= (UUID) getArguments().getSerializable(EXTRA_RECORD_ID);
 
         mRecord = RecordLab.get(getActivity()).getRecord(uuid);
@@ -87,13 +94,19 @@ public class RecordFragment extends Fragment {
      * @param savedInstanceState
      * @return
      */
+    @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG,"onCreateView");
         //第三个参数是false，是因为将通过代码添加视图
         View v = inflater.inflate(R.layout.fragment_record, container, false);
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+            if (NavUtils.getParentActivityName(getActivity())!=null){
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
+        }
         mTitle = (EditText) v.findViewById(R.id.record_title);
         mTitle.setText(mRecord.getTitle());
         mTitle.addTextChangedListener(new TextWatcher() {
@@ -167,6 +180,20 @@ public class RecordFragment extends Fragment {
             mRecord.setDate(date);
             updateDate();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Log.d(TAG,"向上按钮得到响应");
+                if (NavUtils.getParentActivityName(getActivity())!=null){
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+                return true;
+            default:return super.onOptionsItemSelected(item);
+        }
+
     }
 
     @Override

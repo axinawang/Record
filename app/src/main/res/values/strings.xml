@@ -11,4 +11,10 @@
     <string name="records_title">Records</string>
     <string name="date_picker_title">Date of Record</string>
     <string name="time_picker_title">Time</string>
+    <string name="new_record">New Record</string>
+    <string name="delete_record">Delete Record</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle">If you see something,you say something.</string>
+    <string name="list_fragment_empty_text">empty</string>
 </resources>

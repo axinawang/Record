@@ -17,12 +17,12 @@ public class RecordLab {
     private RecordLab(Context context){
         mAppContext=context;
         mRecords=new ArrayList<Record>();
-        for (int i=0;i<100;i++){
+        /*for (int i=0;i<100;i++){
             Record r=new Record();
             r.setTitle("Record #"+i);
             r.setSolved(i%2==0);
             mRecords.add(r);
-        }
+        }*/
     }
 
     /**
@@ -46,5 +46,8 @@ public class RecordLab {
             if (r.getUUID().equals(uuid)){return r;}
         }
         return null;
+    }
+    public void addRecord(Record record){
+        mRecords.add(record);
     }
 }
