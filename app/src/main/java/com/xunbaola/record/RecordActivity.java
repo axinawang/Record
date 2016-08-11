@@ -16,7 +16,7 @@ public class RecordActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         UUID recordId= (UUID) getIntent().getSerializableExtra(RecordFragment.EXTRA_RECORD_ID);
-        return RecordFragment.newInstance(recordId);
+        return null;
     }
 
 

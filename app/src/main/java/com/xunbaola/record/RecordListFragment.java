@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -50,7 +52,7 @@ public class RecordListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //View view=super.onCreateView(inflater, container, savedInstanceState);
         View view =inflater.inflate(R.layout.list_fragment_record,container,false);
         mNewRecordBtn= (Button) view.findViewById(R.id.button_add_record);
@@ -65,6 +67,50 @@ public class RecordListFragment extends ListFragment {
                 ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(R.string.subtitle);
             }
         }
+        ListView listView= (ListView) view.findViewById(android.R.id.list);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater=mode.getMenuInflater();
+                inflater.inflate(R.menu.record_list_item_context,menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_item_delete_record:
+                        RecordAdapter adapter= (RecordAdapter) getListAdapter();
+                        RecordLab recordLab=RecordLab.get(getActivity());
+                        for (int i=adapter.getCount()-1;i>=0;i--){
+                            if (getListView().isItemChecked(i)){
+                                recordLab.deleteRecord(adapter.getItem(i));
+                            }
+                        }
+                        mode.finish();
+                        adapter.notifyDataSetChanged();
+                        return true;
+                    default:return false;
+                }
+
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
         return view;
     }
 
@@ -123,7 +169,7 @@ public class RecordListFragment extends ListFragment {
                     item.setTitle(R.string.show_subtitle);
                     mSubTitle=false;
                 }
-
+            return true;
             default:return super.onOptionsItemSelected(item);
         }
 

@@ -27,7 +27,7 @@ public class RecordLab {
         mAppContext=context;
        mFileName= mAppContext.getResources().getText(R.string.data_file_name).toString();
         Log.d(TAG,"data filename:"+mFileName);
-       
+
 
         mSerializer=new RecordJsonSerializer(mAppContext,mFileName);
         try {
@@ -37,9 +37,11 @@ public class RecordLab {
             mRecords=new ArrayList<Record>();
             Log.e(TAG,"Error loading records: " ,e);
         }
-        /*for (int i=0;i<100;i++){
+        /*mRecords=new ArrayList<Record>();
+        for (int i=0;i<10;i++){
             Record r=new Record();
             r.setTitle("Record #"+i);
+            r.setDetail("Detail @"+i);
             r.setSolved(i%2==0);
             mRecords.add(r);
         }*/
@@ -78,5 +80,9 @@ public class RecordLab {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void deleteRecord(Record item) {
+        mRecords.remove(item);
     }
 }
