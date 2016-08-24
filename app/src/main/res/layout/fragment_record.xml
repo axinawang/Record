@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,5 +44,42 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/record_solved_label"/>
+    <ImageButton
+        android:id="@+id/record1_imageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_camera"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/record_photo1_imageView"
+        android:scaleType="centerInside"
+        android:background="@android:color/darker_gray"
+        android:cropToPadding="true"/>
+    <ImageButton
+        android:id="@+id/record2_imageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_camera"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/record_photo2_imageView"
+        android:scaleType="centerInside"
+        android:background="@android:color/darker_gray"
+        android:cropToPadding="true"/>
+    <ImageButton
+        android:id="@+id/record3_imageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_camera"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/record_photo3_imageView"
+        android:scaleType="centerInside"
+        android:background="@android:color/darker_gray"
+        android:cropToPadding="true"/>
 
 </LinearLayout>
+    </ScrollView>

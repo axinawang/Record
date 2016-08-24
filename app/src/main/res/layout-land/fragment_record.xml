@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+<LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,5 +53,69 @@
             android:text="@string/record_solved_label"
             android:layout_weight="1"/>
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/record1_imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_camera"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:id="@+id/record_photo1_imageView"
+                android:scaleType="centerInside"
+                android:background="@android:color/darker_gray"
+                android:cropToPadding="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/record2_imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@android:drawable/ic_menu_camera"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:id="@+id/record_photo2_imageView"
+                android:scaleType="centerInside"
+                android:background="@android:color/darker_gray"
+                android:cropToPadding="true"/>
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/record3_imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_camera"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:id="@+id/record_photo3_imageView"
+                    android:scaleType="centerInside"
+                    android:background="@android:color/darker_gray"
+                    android:cropToPadding="true"/>
+            </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

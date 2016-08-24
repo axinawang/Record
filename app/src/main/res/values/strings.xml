@@ -20,4 +20,10 @@
     <string name="data_file_name">record.json</string>
     <string name="data_save_success">data saved successfully!</string>
     <string name="data_save_fail">data saved fail</string>
+    <string name="take">Take!</string>
+    <string name="delete_photo1">Delete Photo1</string>
+    <string name="delete_photo3">Delete Photo3</string>
+    <string name="delete_photo2">Delete Photo2</string>
+
+
 </resources>
