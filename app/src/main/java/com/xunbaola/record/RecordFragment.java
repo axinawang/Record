@@ -4,11 +4,16 @@ package com.xunbaola.record;
 import android.annotation.TargetApi;
 import android.app.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
@@ -37,10 +42,13 @@ import com.xunbaola.record.camera.RecordCameraFrament;
 import com.xunbaola.record.data.RecordLab;
 import com.xunbaola.record.domain.Photo;
 import com.xunbaola.record.domain.Record;
+import com.xunbaola.record.utils.PhoneUtil;
 import com.xunbaola.record.utils.PictureUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -57,6 +65,8 @@ public class RecordFragment extends Fragment {
     //private static final String DIALOG_TIME = "time";
     private static final int REQUEST_DATE_TIME = 0;
     private static final int REQUEST_PHOTO = 1;
+    private static final int REQUEST_CONTACT = 2;
+    private static final String DIALOG_PHONE_NUMBERS ="phone_numbers" ;
     //private static final int REQUEST_TIME =1 ;
     private Record mRecord;//保存记录
     //private int mPosition;//记录的位置
@@ -73,7 +83,8 @@ public class RecordFragment extends Fragment {
     private ImageView mPhoto1View;
     private ImageView mPhoto2View;
     private ImageView mPhoto3View;
-
+    private Button mLinkmanButton;
+    private Button mCallButton;
 
 
     /**
@@ -226,7 +237,74 @@ public class RecordFragment extends Fragment {
         registerForContextMenu(mPhoto1View);
         registerForContextMenu(mPhoto2View);
         registerForContextMenu(mPhoto3View);
+        Button reportButton= (Button) view.findViewById(R.id.record_report_button);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,getRecordReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.record_report_subject));
+                intent=Intent.createChooser(intent,getString(R.string.send_report));
+                boolean isIntentSafe=checkResponseActivity(getActivity(),intent);
+                if (isIntentSafe) {
+                    startActivity(intent);
+                }
+
+            }
+        });
+        mLinkmanButton= (Button) view.findViewById(R.id.record_linkman_button);
+        mLinkmanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                if (checkResponseActivity(getActivity(),i)) {
+                    startActivityForResult(i,REQUEST_CONTACT);
+                }
+
+            }
+
+        });
+        if (mRecord.getLinkman() != null) {
+            mLinkmanButton.setText(mRecord.getLinkman());
+        }
+        mCallButton= (Button) view.findViewById(R.id.record_call_button);
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRecord.getLinkman() != null) {
+                    ArrayList<String> nums= PhoneUtil.getPhoneByName(getContext(),mRecord.getLinkman());
+                    if (nums.size()==0) {
+                        Toast.makeText(getContext(),mRecord.getLinkman()+":电话号码为空",Toast.LENGTH_LONG).show();
+                    }else if(nums.size()==1){
+                        //只存在一个电话，直接启动电话应用
+                        Intent i=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+nums.get(0)));
+                        startActivity(i);
+                    }else {
+                        //弹出电话号码选择框
+                        PhoneNumbersFragment.newInstance(nums).show(getActivity().getSupportFragmentManager(),DIALOG_PHONE_NUMBERS);
+                    }
+                }
+            }
+        });
         return view;
+    }
+
+    /**
+     * 检测是否存在用来响应该intent的activity
+     * @param context
+     * @param intent
+     * @return
+     */
+    private boolean checkResponseActivity(Context context,Intent intent) {
+        PackageManager pm=context.getPackageManager();
+        List<ResolveInfo> activities=pm.queryIntentActivities(intent,0);
+        if (activities.size()==0) {
+            Toast.makeText(context,"no activity to response",Toast.LENGTH_LONG).show();
+            return false;
+        }else {
+           return true;
+        }
     }
 
     @Override
@@ -305,6 +383,21 @@ public class RecordFragment extends Fragment {
                 }
                 Log.i(TAG,"record: "+mRecord.getTitle()+"has a photo:"+filename);
             }
+        }else if (requestCode==REQUEST_CONTACT){
+            Uri contactUri=data.getData();
+            //确定想要返回哪些数据，这里返回联系人名字
+            String[] queryFields=new String[]{ContactsContract.Contacts.DISPLAY_NAME};
+            //执行查询---contactUri相当于where子句
+            Cursor c=getActivity().getContentResolver().query(contactUri,queryFields,null,null,null);
+            if (c.getCount()==0){
+                c.close();
+                return;
+            }
+            c.moveToFirst();
+            String linkman=c.getString(0);
+            mRecord.setLinkman(linkman);
+            mLinkmanButton.setText(linkman);
+            c.close();
         }
     }
 
@@ -398,6 +491,24 @@ public class RecordFragment extends Fragment {
             }
         }
         adapter.notifyDataSetChanged();
+    }
+    private String getRecordReport(){
+        String solvedString=null;
+        if (mRecord.isSolved()) {
+            solvedString=getString(R.string.record_report_solved);
+        }else {
+            solvedString=getString(R.string.record_report_unsolved);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString= sdf.format(mRecord.getDate());
+        String linkman=mRecord.getLinkman();
+        if (linkman != null) {
+            linkman=getString(R.string.record_report_linkman,mRecord.getLinkman());
+        }else {
+            linkman=getString(R.string.record_report_no_linkman);
+        }
+        String report=getString(R.string.record_report,mRecord.getTitle(),mRecord.getDetail(),dateString,solvedString,linkman);
+        return report;
     }
     private class TitleTextWatcher implements TextWatcher {
         @Override

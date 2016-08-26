@@ -19,6 +19,7 @@ public class Record {
     private static final String JSON_PHOTO1="photo1";
     private static final String JSON_PHOTO2="photo2";
     private static final String JSON_PHOTO3="photo3";
+    private static final String JSON_LINKMAN="linkman";
 
 
 
@@ -30,6 +31,7 @@ public class Record {
     private Photo mPhoto1;
     private Photo mPhoto2;
     private Photo mPhoto3;
+    private String mLinkman;
     public Record(){
         mUUID=UUID.randomUUID();
         mDate=new Date();
@@ -48,6 +50,9 @@ public class Record {
         }
         if (json.has(JSON_PHOTO3)){
             mPhoto3=new Photo(json.getJSONObject(JSON_PHOTO3));
+        }
+        if (json.has(JSON_LINKMAN)) {
+            mLinkman=json.getString(JSON_LINKMAN);
         }
     }
 
@@ -131,6 +136,14 @@ public class Record {
         mPhoto3 = photo3;
     }
 
+    public String getLinkman() {
+        return mLinkman;
+    }
+
+    public void setLinkman(String linkman) {
+        mLinkman = linkman;
+    }
+
     @Override
     public String toString() {
         return mTitle;
@@ -151,6 +164,7 @@ public class Record {
         }if (mPhoto3 != null) {
             json.put(JSON_PHOTO3,mPhoto3.toJson());
         }
+        json.put(JSON_LINKMAN,mLinkman);
         return json;
     }
     public boolean deletePhoto(String filename ,int position){

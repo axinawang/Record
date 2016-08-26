@@ -24,6 +24,16 @@
     <string name="delete_photo1">Delete Photo1</string>
     <string name="delete_photo3">Delete Photo3</string>
     <string name="delete_photo2">Delete Photo2</string>
+    <string name="record_linkman_text">Choose Linkman</string>
+    <string name="record_report_text">Send Record Report</string>
+    <string name="record_report">%1$s!%2$s.The record was recorded on %3$s.%4$s,and %5$s</string>
+    <string name="record_report_solved">The record is solved</string>
+    <string name="record_report_unsolved">The record is not solved</string>
+    <string name="record_report_no_linkman">There is no linkman</string>
+    <string name="record_report_linkman">The linkman is %s</string>
+    <string name="record_report_subject">Record Report</string>
+    <string name="send_report">Send record report</string>
+    <string name="record_call">Call</string>
 
 
 </resources>
