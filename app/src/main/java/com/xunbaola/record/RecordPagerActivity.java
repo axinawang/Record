@@ -25,7 +25,7 @@ import com.xunbaola.record.domain.Record;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class RecordPagerActivity extends AppCompatActivity{
+public class RecordPagerActivity extends AppCompatActivity implements RecordFragment.Callbacks{
     public static final String TAG="RecordPagerActivity";
     private ViewPager mViewPager;
     private MyAdapter mMyAdapter;
@@ -76,6 +76,11 @@ public class RecordPagerActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    public void onRecordUpdated(Record record) {
+
+    }
+
     private class MyAdapter extends FragmentStatePagerAdapter{
 
         public MyAdapter(FragmentManager fm) {
@@ -92,7 +97,7 @@ public class RecordPagerActivity extends AppCompatActivity{
         @Override
             public RecordFragment getItem(int position) {
                 Record record=mRecords.get(position);
-                RecordFragment fragment=RecordFragment.newInstance(record.getUUID(),position);
+                RecordFragment fragment=RecordFragment.newInstance(record.getUUID());
                 return fragment;
             }
 

@@ -1,6 +1,7 @@
 package com.xunbaola.record;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,23 @@ public class RecordListFragment extends ListFragment {
     private ArrayList<Record> mRecords;
     private boolean mSubTitle;
     private Button mNewRecordBtn;
+    private Callbacks mCallbacks;
+    public interface Callbacks{
+        void onRecordSelected(Record record);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks= (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks=null;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,16 +143,17 @@ public class RecordListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Record r= ((RecordAdapter) getListAdapter()).getItem(position);
-        //Log.i(TAG,r.getTitle()+"was clicked");
-        Intent i=new Intent(getActivity(),RecordPagerActivity.class);
-        i.putExtra(RecordFragment.EXTRA_RECORD_ID,r.getUUID());
-        startActivityForResult(i,REQUEST_RECORD);
+       mCallbacks.onRecordSelected(r);
     }
 
     @Override
     public void onResume() {
         Log.i(TAG,mRecords.size()+"");
         super.onResume();
+        updateUI();
+    }
+
+    public void updateUI() {
         ((RecordAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
@@ -178,9 +197,8 @@ public class RecordListFragment extends ListFragment {
     private void addRecord() {
         Record record=new Record();
         RecordLab.get(getActivity()).addRecord(record);
-        Intent i=new Intent(getActivity(),RecordPagerActivity.class);
-        i.putExtra(RecordFragment.EXTRA_RECORD_ID,record.getUUID());
-        startActivityForResult(i,REQUEST_NEW_RECORD);
+        updateUI();
+        mCallbacks.onRecordSelected(record);
     }
 
     private class RecordAdapter extends ArrayAdapter<Record>{

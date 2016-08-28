@@ -20,12 +20,18 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     private static final String TAG =SingleFragmentActivity.class.getName() ;
     protected abstract Fragment createFragment();
 
-
+    /**
+     * 子类覆写该方法，以提供布局资源id
+     * @return
+     */
+    protected int getLayoutResId(){
+        return R.layout.activity_fragment;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
        Log.i(TAG,this.toString());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(getLayoutResId());
         FragmentManager fm=getSupportFragmentManager();
         Log.i(TAG,"fm   :"+fm);
         Fragment fragment=fm.findFragmentById(R.id.fragmentContainer);

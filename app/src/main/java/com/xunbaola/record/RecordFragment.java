@@ -85,7 +85,22 @@ public class RecordFragment extends Fragment {
     private ImageView mPhoto3View;
     private Button mLinkmanButton;
     private Button mCallButton;
+    private Callbacks mCallbacks;
+    public interface Callbacks{
+        void onRecordUpdated(Record record);
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks= (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks=null;
+    }
 
     /**
      * 创建实例，设置参数
@@ -93,11 +108,11 @@ public class RecordFragment extends Fragment {
      * @param recordId uuid
      * @return recordFragment
      */
-    public static RecordFragment newInstance(UUID recordId, int position) {
+    public static RecordFragment newInstance(UUID recordId) {
         RecordFragment fragment = new RecordFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_RECORD_ID, recordId);
-        bundle.putInt(EXTRA_RECORD_POSITION, position);
+        //bundle.putInt(EXTRA_RECORD_POSITION, position);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -354,6 +369,7 @@ public class RecordFragment extends Fragment {
         if (requestCode == REQUEST_DATE_TIME) {
             Date date = (Date) data.getSerializableExtra(DateTimeFragment.EXTRA_DATE_TIME);
             mRecord.setDate(date);
+            mCallbacks.onRecordUpdated(mRecord);
             updateDate();
         }else if (requestCode==REQUEST_PHOTO){
             String filename=data.getStringExtra(RecordCameraFrament.EXTRA_PHOTO_FILENAME);
@@ -367,17 +383,17 @@ public class RecordFragment extends Fragment {
                         if (mRecord.getPhoto1() != null) {
                             mRecord.deletePhoto(getActivity().getFileStreamPath(mRecord.getPhoto1().getFilename()).getAbsolutePath(),1);
                         }
-                        mRecord.setPhoto1(p);showPhoto(p,mPhoto1View);break;
+                        mRecord.setPhoto1(p);mCallbacks.onRecordUpdated(mRecord);showPhoto(p,mPhoto1View);break;
                     case '2':
                         if (mRecord.getPhoto2() != null) {
                             mRecord.deletePhoto(getActivity().getFileStreamPath(mRecord.getPhoto2().getFilename()).getAbsolutePath(),2);
                         }
-                        mRecord.setPhoto2(p);showPhoto(p,mPhoto2View);break;
+                        mRecord.setPhoto2(p);mCallbacks.onRecordUpdated(mRecord);showPhoto(p,mPhoto2View);break;
                     case '3':
                         if (mRecord.getPhoto3() != null) {
                             mRecord.deletePhoto(getActivity().getFileStreamPath(mRecord.getPhoto3().getFilename()).getAbsolutePath(),3);
                         }
-                        mRecord.setPhoto3(p);showPhoto(p,mPhoto3View);break;
+                        mRecord.setPhoto3(p);mCallbacks.onRecordUpdated(mRecord);showPhoto(p,mPhoto3View);break;
                     default:Log.e(TAG,"错误：照片文件名不是以1、2、3结尾");
 
                 }
@@ -396,6 +412,7 @@ public class RecordFragment extends Fragment {
             c.moveToFirst();
             String linkman=c.getString(0);
             mRecord.setLinkman(linkman);
+            mCallbacks.onRecordUpdated(mRecord);
             mLinkmanButton.setText(linkman);
             c.close();
         }
@@ -520,6 +537,8 @@ public class RecordFragment extends Fragment {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             Log.d(TAG, "onTextChanged----->s= " + s + " fragment =" + RecordFragment.this);
             mRecord.setTitle(s.toString());
+            mCallbacks.onRecordUpdated(mRecord);
+           getActivity().setTitle(mRecord.getTitle());
         }
 
         @Override
@@ -537,6 +556,7 @@ public class RecordFragment extends Fragment {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             Log.d(TAG, "onTextChanged----->s= " + s + " fragment =" + RecordFragment.this);
             mRecord.setDetail(s.toString());
+            mCallbacks.onRecordUpdated(mRecord);
         }
 
         @Override
@@ -549,6 +569,7 @@ public class RecordFragment extends Fragment {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mRecord.setSolved(isChecked);
+            mCallbacks.onRecordUpdated(mRecord);
         }
     }
 }
